@@ -1,0 +1,2006 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neural Grid - Brain Boosting Logic Game</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           CSS VARIABLES & RESET
+           ============================================ */
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #1a1a2e;
+            --accent-cyan: #00f5d4;
+            --accent-magenta: #f72585;
+            --accent-yellow: #fee440;
+            --accent-red: #ff4444;
+            --text-primary: #ffffff;
+            --text-secondary: #8888aa;
+            --grid-default: #1a1a2e;
+            --grid-active: #00f5d4;
+            --grid-wrong: #ff4444;
+            --grid-hint: #fee440;
+            --font-heading: "Orbitron", sans-serif;
+            --font-mono: "Space Mono", monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-heading);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            user-select: none;
+        }
+
+        /* ============================================
+           PARTICLE CANVAS BACKGROUND
+           ============================================ */
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           SCREENS & LAYOUT
+           ============================================ */
+        .screen {
+            display: none;
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .screen.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ============================================
+           START SCREEN
+           ============================================ */
+        #startScreen {
+            text-align: center;
+        }
+
+        .game-title {
+            font-size: clamp(2.5rem, 8vw, 6rem);
+            font-weight: 900;
+            letter-spacing: 0.1em;
+            margin-bottom: 10px;
+            position: relative;
+            animation: glitch 2s infinite;
+        }
+
+        .game-title span {
+            display: inline-block;
+            color: var(--accent-cyan);
+            text-shadow: 
+                0 0 10px var(--accent-cyan),
+                0 0 20px var(--accent-cyan),
+                0 0 40px var(--accent-cyan);
+        }
+
+        .game-title span:last-child {
+            color: var(--accent-magenta);
+            text-shadow: 
+                0 0 10px var(--accent-magenta),
+                0 0 20px var(--accent-magenta),
+                0 0 40px var(--accent-magenta);
+        }
+
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-1px, -1px); }
+            98% { transform: translate(1px, 1px); }
+        }
+
+        .subtitle {
+            font-family: var(--font-mono);
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            letter-spacing: 0.2em;
+        }
+
+        .best-score {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            color: var(--accent-yellow);
+            margin-bottom: 30px;
+            text-shadow: 0 0 10px var(--accent-yellow);
+        }
+
+        .difficulty-selector {
+            margin-bottom: 40px;
+        }
+
+        .difficulty-selector label {
+            display: block;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        .difficulty-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 15px 35px;
+            border: 2px solid var(--accent-cyan);
+            background: transparent;
+            color: var(--accent-cyan);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            background: rgba(0, 245, 212, 0.1);
+            box-shadow: 
+                0 0 20px rgba(0, 245, 212, 0.5),
+                inset 0 0 20px rgba(0, 245, 212, 0.1);
+        }
+
+        .btn.active {
+            background: var(--accent-cyan);
+            color: var(--bg-primary);
+            box-shadow: 0 0 30px rgba(0, 245, 212, 0.8);
+        }
+
+        .btn-secondary {
+            border-color: var(--accent-magenta);
+            color: var(--accent-magenta);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(247, 37, 133, 0.1);
+            box-shadow: 
+                0 0 20px rgba(247, 37, 133, 0.5),
+                inset 0 0 20px rgba(247, 37, 133, 0.1);
+        }
+
+        .btn-large {
+            font-size: 1.3rem;
+            padding: 20px 50px;
+            margin-top: 20px;
+        }
+
+        .how-to-btn {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            padding: 12px 25px;
+        }
+
+        /* ============================================
+           GAME SCREEN
+           ============================================ */
+        #gameScreen {
+            padding: 10px;
+        }
+
+        #gameScreen.active {
+            justify-content: flex-start;
+        }
+
+        .hud {
+            width: 100%;
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 245, 212, 0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hud-item {
+            text-align: center;
+            padding: 10px;
+        }
+
+        .hud-label {
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 5px;
+        }
+
+        .hud-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px rgba(0, 245, 212, 0.5);
+        }
+
+        .hud-value#score {
+            font-family: var(--font-mono);
+        }
+
+        .hud-value#lives {
+            color: var(--accent-magenta);
+            text-shadow: 0 0 10px rgba(247, 37, 133, 0.5);
+        }
+
+        .hud-value#combo {
+            color: var(--accent-yellow);
+            text-shadow: 0 0 10px rgba(254, 228, 64, 0.5);
+        }
+
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        @media (min-width: 900px) {
+            .game-area {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        .side-panel {
+            width: 100%;
+            max-width: 250px;
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(0, 245, 212, 0.3);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            order: 2;
+        }
+
+        @media (min-width: 900px) {
+            .side-panel {
+                order: 0;
+            }
+        }
+
+        .side-panel h3 {
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .rule-description {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .example-cell {
+            aspect-ratio: 1;
+            background: var(--bg-primary);
+            border: 1px solid rgba(0, 245, 212, 0.3);
+            border-radius: 3px;
+        }
+
+        .example-cell.active {
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .grid-container {
+            position: relative;
+            order: 1;
+        }
+
+        @media (min-width: 900px) {
+            .grid-container {
+                order: 1;
+                flex: 1;
+            }
+        }
+
+        .game-grid {
+            display: grid;
+            gap: clamp(5px, 1.5vw, 10px);
+            padding: 20px;
+            background: rgba(26, 26, 46, 0.5);
+            border: 2px solid rgba(0, 245, 212, 0.3);
+            border-radius: 15px;
+            position: relative;
+        }
+
+        .grid-cell {
+            width: clamp(50px, 12vw, 70px);
+            height: clamp(50px, 12vw, 70px);
+            background: var(--grid-default);
+            border: 1px solid rgba(0, 245, 212, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            font-weight: 700;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .grid-cell::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+            opacity: 0.5;
+        }
+
+        .grid-cell:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .grid-cell:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 15px rgba(0, 245, 212, 0.3);
+        }
+
+        .grid-cell.lit {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            box-shadow: 
+                0 0 20px var(--accent-cyan),
+                inset 0 0 20px rgba(255, 255, 255, 0.3);
+            animation: pulse 1.5s infinite;
+        }
+
+        .grid-cell.wrong {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            animation: shake 0.5s ease;
+        }
+
+        .grid-cell.correct {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            animation: ripple 0.6s ease;
+        }
+
+        .grid-cell.hint {
+            background: var(--accent-yellow);
+            border-color: var(--accent-yellow);
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .grid-cell .number {
+            color: var(--text-primary);
+            z-index: 1;
+        }
+
+        /* Timer Ring */
+        .timer-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 20px auto;
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+        }
+
+        .timer-bg {
+            fill: none;
+            stroke: rgba(0, 245, 212, 0.2);
+            stroke-width: 6;
+        }
+
+        .timer-progress {
+            fill: none;
+            stroke: var(--accent-cyan);
+            stroke-width: 6;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+
+        .timer-warning {
+            stroke: var(--accent-yellow);
+        }
+
+        .timer-danger {
+            stroke: var(--accent-red);
+        }
+
+        .timer-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .game-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+            order: 3;
+        }
+
+        @media (min-width: 900px) {
+            .game-controls {
+                order: 2;
+            }
+        }
+
+        .control-btn {
+            padding: 12px 25px;
+            font-size: 0.9rem;
+        }
+
+        .hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* ============================================
+           LEVEL UP SCREEN
+           ============================================ */
+        #levelUpScreen .level-up-text {
+            font-size: clamp(3rem, 10vw, 8rem);
+            font-weight: 900;
+            color: var(--accent-yellow);
+            text-shadow: 
+                0 0 20px var(--accent-yellow),
+                0 0 40px var(--accent-yellow);
+            animation: levelUpGlitch 1s ease;
+        }
+
+        @keyframes levelUpGlitch {
+            0% { transform: scale(0.5) skewX(-20deg); opacity: 0; }
+            50% { transform: scale(1.2) skewX(10deg); }
+            70% { transform: scale(0.9) skewX(-5deg); }
+            100% { transform: scale(1) skewX(0); opacity: 1; }
+        }
+
+        .level-stats {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .level-stat-item {
+            font-family: var(--font-mono);
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: var(--text-secondary);
+        }
+
+        .level-stat-item span {
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           GAME OVER SCREEN
+           ============================================ */
+        #gameOverScreen .game-over-text {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 900;
+            color: var(--accent-red);
+            text-shadow: 
+                0 0 20px var(--accent-red),
+                0 0 40px var(--accent-red);
+            margin-bottom: 30px;
+            animation: gameOverPulse 2s infinite;
+        }
+
+        @keyframes gameOverPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .final-stats {
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid rgba(247, 37, 133, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            min-width: 300px;
+        }
+
+        .final-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-family: var(--font-mono);
+        }
+
+        .final-stat:last-child {
+            border-bottom: none;
+        }
+
+        .final-stat-label {
+            color: var(--text-secondary);
+        }
+
+        .final-stat-value {
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        /* ============================================
+           PAUSE MENU
+           ============================================ */
+        #pauseMenu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #pauseMenu.active {
+            display: flex;
+        }
+
+        .pause-title {
+            font-size: 3rem;
+            color: var(--accent-yellow);
+            margin-bottom: 40px;
+            text-shadow: 0 0 20px var(--accent-yellow);
+        }
+
+        .pause-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ============================================
+           HOW TO PLAY MODAL
+           ============================================ */
+        #howToModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(10, 10, 15, 0.95);
+            z-index: 100;
+            display: none;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        #howToModal.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .modal-content {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.9);
+            border: 1px solid rgba(0, 245, 212, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            color: var(--accent-cyan);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .rule-section {
+            margin-bottom: 25px;
+        }
+
+        .rule-section h4 {
+            color: var(--accent-magenta);
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .rule-section p {
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 40px);
+            gap: 5px;
+            margin: 15px auto;
+            justify-content: center;
+        }
+
+        .demo-cell {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-primary);
+            border: 1px solid rgba(0, 245, 212, 0.3);
+            border-radius: 4px;
+        }
+
+        .demo-cell.highlight {
+            background: var(--accent-cyan);
+            animation: demoPulse 1.5s infinite;
+        }
+
+        @keyframes demoPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .close-modal-btn {
+            margin-top: 20px;
+        }
+
+        /* ============================================
+           FLOATING TEXT ANIMATION
+           ============================================ */
+        .floating-text {
+            position: absolute;
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1.2rem;
+            pointer-events: none;
+            animation: floatUp 1s ease forwards;
+            z-index: 50;
+        }
+
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(0) scale(1); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(-50px) scale(1.5); 
+                opacity: 0; 
+            }
+        }
+
+        .floating-text.positive {
+            color: var(--accent-cyan);
+            text-shadow: 0 0 10px var(--accent-cyan);
+        }
+
+        .floating-text.negative {
+            color: var(--accent-red);
+            text-shadow: 0 0 10px var(--accent-red);
+        }
+
+        .floating-text.bonus {
+            color: var(--accent-yellow);
+            text-shadow: 0 0 10px var(--accent-yellow);
+        }
+
+        /* ============================================
+           SCREEN FLASH
+           ============================================ */
+        .screen-flash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 68, 68, 0.3);
+            z-index: 90;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
+
+        .screen-flash.active {
+            opacity: 1;
+        }
+
+        /* ============================================
+           NEURAL PULSE WAVE
+           ============================================ */
+        .neural-pulse {
+            position: absolute;
+            border: 2px solid var(--accent-cyan);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: neuralWave 1s ease forwards;
+        }
+
+        @keyframes neuralWave {
+            0% { 
+                width: 0; 
+                height: 0; 
+                opacity: 1; 
+            }
+            100% { 
+                width: 500px; 
+                height: 500px; 
+                opacity: 0; 
+            }
+        }
+
+        /* ============================================
+           MUTE BUTTON
+           ============================================ */
+        .mute-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-cyan);
+            background: rgba(10, 10, 15, 0.8);
+            color: var(--accent-cyan);
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mute-btn:hover {
+            background: rgba(0, 245, 212, 0.2);
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.5);
+        }
+
+        /* ============================================
+           DIFFICULTY INDICATOR
+           ============================================ */
+        .difficulty-indicator {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: rgba(26, 26, 46, 0.8);
+            border: 1px solid var(--accent-cyan);
+            border-radius: 5px;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            z-index: 50;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .difficulty-indicator.hard {
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Screen Flash Overlay -->
+    <div class="screen-flash" id="screenFlash"></div>
+
+    <!-- Mute Button -->
+    <button class="mute-btn" id="muteBtn" onclick="toggleMute()">🔊</button>
+
+    <!-- Difficulty Indicator -->
+    <div class="difficulty-indicator" id="diffIndicator">EASY</div>
+
+    <!-- ============================================
+         START SCREEN
+         ============================================ -->
+    <div class="screen active" id="startScreen">
+        <h1 class="game-title">
+            <span>NEURAL</span>
+            <span>GRID</span>
+        </h1>
+        <p class="subtitle">LOGIC DEDUCTION GAME</p>
+        
+        <div class="best-score" id="bestScoreDisplay">BEST SCORE: 0</div>
+        
+        <div class="difficulty-selector">
+            <label>SELECT DIFFICULTY</label>
+            <div class="difficulty-buttons">
+                <button class="btn " data-diff="easy" onclick="selectDifficulty('easy')">EASY</button>
+                <button class="btn active" data-diff="normal" onclick="selectDifficulty('normal')">NORMAL</button>
+                <button class="btn" data-diff="hard" onclick="selectDifficulty('hard')">HARD</button>
+            </div>
+        </div>
+        
+        <button class="btn btn-large" onclick="startGame()">START GAME</button>
+        <button class="btn btn-secondary how-to-btn" onclick="showHowToPlay()">HOW TO PLAY</button>
+    </div>
+
+    <!-- ============================================
+         GAME SCREEN
+         ============================================ -->
+    <div class="screen" id="gameScreen">
+        <div class="hud">
+            <div class="hud-item">
+                <div class="hud-label">Score</div>
+                <div class="hud-value" id="score">0</div>
+            </div>
+            <div class="hud-item">
+                <div class="hud-label">Level</div>
+                <div class="hud-value" id="level">1</div>
+            </div>
+            <div class="hud-item">
+                <div class="hud-label">Lives</div>
+                <div class="hud-value" id="lives">❤️❤️❤️</div>
+            </div>
+            <div class="hud-item">
+                <div class="hud-label">Combo</div>
+                <div class="hud-value" id="combo">x1</div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="side-panel" id="sidePanel">
+                <h3 id="ruleTitle">Pattern Rule</h3>
+                <div class="rule-description" id="ruleDescription">
+                    Click cells to complete the pattern...
+                </div>
+                <div class="example-grid" id="exampleGrid"></div>
+            </div>
+
+            <div class="grid-container">
+                <div class="game-grid" id="gameGrid"></div>
+                <div class="timer-container">
+                    <svg class="timer-svg" width="80" height="80" viewBox="0 0 80 80">
+                        <circle class="timer-bg" cx="40" cy="40" r="35"></circle>
+                        <circle class="timer-progress" id="timerRing" cx="40" cy="40" r="35"
+                            stroke-dasharray="220" stroke-dashoffset="0"></circle>
+                    </svg>
+                    <div class="timer-text" id="timerText">15</div>
+                </div>
+            </div>
+
+            <div class="game-controls">
+                <button class="btn control-btn hint-btn" id="hintBtn" onclick="useHint()">
+                    💡 HINT (1)
+                </button>
+                <button class="btn control-btn btn-secondary" onclick="pauseGame()">
+                    ⏸️ PAUSE
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================
+         LEVEL UP SCREEN
+         ============================================ -->
+    <div class="screen" id="levelUpScreen">
+        <h2 class="level-up-text">LEVEL UP!</h2>
+        <div class="level-stats">
+            <div class="level-stat-item">
+                Level Complete: <span id="completedLevel">1</span>
+            </div>
+            <div class="level-stat-item">
+                Score Earned: <span id="levelScore">+0</span>
+            </div>
+            <div class="level-stat-item">
+                Time Bonus: <span id="timeBonus">+0</span>
+            </div>
+            <div class="level-stat-item">
+                Next: Level <span id="nextLevel">2</span>
+            </div>
+        </div>
+        <button class="btn btn-large" onclick="nextLevel()">CONTINUE</button>
+    </div>
+
+    <!-- ============================================
+         GAME OVER SCREEN
+         ============================================ -->
+    <div class="screen" id="gameOverScreen">
+        <h2 class="game-over-text">GAME OVER</h2>
+        <div class="final-stats">
+            <div class="final-stat">
+                <span class="final-stat-label">Final Score</span>
+                <span class="final-stat-value" id="finalScore">0</span>
+            </div>
+            <div class="final-stat">
+                <span class="final-stat-label">Levels Reached</span>
+                <span class="final-stat-value" id="finalLevel">1</span>
+            </div>
+            <div class="final-stat">
+                <span class="final-stat-label">Accuracy</span>
+                <span class="final-stat-value" id="finalAccuracy">0%</span>
+            </div>
+            <div class="final-stat">
+                <span class="final-stat-label">Highest Combo</span>
+                <span class="final-stat-value" id="finalCombo">x1</span>
+            </div>
+        </div>
+        <button class="btn btn-large" onclick="restartGame()">PLAY AGAIN</button>
+        <button class="btn btn-secondary how-to-btn" onclick="backToMenu()">MAIN MENU</button>
+    </div>
+
+    <!-- ============================================
+         PAUSE MENU
+         ============================================ -->
+    <div id="pauseMenu">
+        <h2 class="pause-title">PAUSED</h2>
+        <div class="pause-buttons">
+            <button class="btn btn-large" onclick="resumeGame()">RESUME</button>
+            <button class="btn" onclick="restartGame()">RESTART</button>
+            <button class="btn btn-secondary" onclick="toggleMute()">
+                <span id="pauseMuteText">MUTE OFF</span>
+            </button>
+            <button class="btn btn-secondary" onclick="backToMenu()">QUIT</button>
+        </div>
+    </div>
+
+    <!-- ============================================
+         HOW TO PLAY MODAL
+         ============================================ -->
+    <div id="howToModal">
+        <div class="modal-content">
+            <h2 class="modal-title">HOW TO PLAY</h2>
+            
+            <div class="rule-section">
+                <h4>🎯 Objective</h4>
+                <p>Complete the hidden pattern by clicking the correct cells in the grid. Each level has a different logical rule to discover.</p>
+            </div>
+
+            <div class="rule-section">
+                <h4>🪞 Symmetry Pattern</h4>
+                <p>Mirror the lit cells from left to right. Click the cells that complete the reflection.</p>
+                <div class="demo-grid">
+                    <div class="demo-cell highlight"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell highlight"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell highlight"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell highlight"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell highlight"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell highlight"></div>
+                    <div class="demo-cell"></div>
+                    <div class="demo-cell"></div>
+                </div>
+            </div>
+
+            <div class="rule-section">
+                <h4>🔢 Number Sequence</h4>
+                <p>Fill in missing numbers following a pattern (Fibonacci, primes, squares). Click cells with the correct numbers.</p>
+            </div>
+
+            <div class="rule-section">
+                <h4>🔲 Binary Logic (AND/OR/XOR)</h4>
+                <p>Cells light up based on logical operations between rows and columns. Deduce the gate and complete the pattern.</p>
+            </div>
+
+            <div class="rule-section">
+                <h4>🌈 Color Chain</h4>
+                <p>Follow the color gradient sequence. Click the next color in the pattern.</p>
+            </div>
+
+            <div class="rule-section">
+                <h4>➕ Row/Column Sum</h4>
+                <p>Make all rows and columns sum to the same value. Click cells to balance the grid.</p>
+            </div>
+
+            <div class="rule-section">
+                <h4>⚡ Tips</h4>
+                <p>• Use hints wisely (1 per level)<br>
+                • Complete before half time for bonus points<br>
+                • Maintain combo streak for multipliers<br>
+                • Watch the pattern rule description!</p>
+            </div>
+
+            <button class="btn close-modal-btn" onclick="closeHowToPlay()">CLOSE</button>
+        </div>
+    </div>
+
+    <script>
+        /* ============================================
+           GAME STATE OBJECT
+           ============================================ */
+        const gameState = {
+            // Game status
+            isPlaying: false,
+            isPaused: false,
+            currentScreen: "start",
+            
+            // Level & difficulty
+            level: 1,
+            difficulty: "normal", // easy, normal, hard
+            gridSize: 4,
+            timeLimit: 15,
+            
+            // Score & stats
+            score: 0,
+            lives: 3,
+            combo: 1,
+            maxCombo: 1,
+            correctClicks: 0,
+            totalClicks: 0,
+            hintsRemaining: 1,
+            
+            // Pattern data
+            currentPattern: null,
+            targetCells: [], // cells that should be clicked
+            clickedCells: [],
+            patternType: "",
+            
+            // Timer
+            timeRemaining: 15,
+            timerInterval: null,
+            timerStartTime: null,
+            
+            // Audio
+            audioContext: null,
+            isMuted: false,
+            
+            // High score
+            bestScore: 0
+        };
+
+        /* ============================================
+           PATTERN TYPES & GENERATORS
+           ============================================ */
+        const patternTypes = ["symmetry", "sequence", "binary", "color", "sum"];
+        
+        const patternGenerators = {
+            // Symmetry: Mirror left half to right
+            symmetry: (size) => {
+                const grid = Array(size * size).fill(0);
+                const targets = [];
+                const shown = [];
+                
+                // Create pattern in left half
+                for (let row = 0; row < size; row++) {
+                    for (let col = 0; col < Math.floor(size / 2); col++) {
+                        if (Math.random() > 0.5) {
+                            const idx = row * size + col;
+                            grid[idx] = 1;
+                            shown.push(idx);
+                            
+                            // Mirror position is target
+                            const mirrorCol = size - 1 - col;
+                            const mirrorIdx = row * size + mirrorCol;
+                            targets.push(mirrorIdx);
+                        }
+                    }
+                }
+                
+                // Ensure at least some pattern
+                if (targets.length === 0) {
+                    const row = Math.floor(Math.random() * size);
+                    const col = 0;
+                    const idx = row * size + col;
+                    grid[idx] = 1;
+                    shown.push(idx);
+                    targets.push(row * size + (size - 1));
+                }
+                
+                return {
+                    grid,
+                    shown,
+                    targets,
+                    rule: "Symmetry",
+                    description: "Mirror the left half to the right. Click cells to complete the reflection.",
+                    hint: "Imagine a vertical line through the center. Each lit cell on the left has a partner on the right."
+                };
+            },
+            
+            // Number Sequence: Fibonacci, primes, squares
+            sequence: (size) => {
+                const grid = Array(size * size).fill(0);
+                const targets = [];
+                const shown = [];
+                
+                // Choose sequence type
+                const seqTypes = ["fibonacci", "primes", "squares"];
+                const seqType = seqTypes[Math.floor(Math.random() * seqTypes.length)];
+                let numbers = [];
+                
+                switch(seqType) {
+                    case "fibonacci":
+                        numbers = [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
+                        break;
+                    case "primes":
+                        numbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37];
+                        break;
+                    case "squares":
+                        numbers = [1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144];
+                        break;
+                }
+                
+                // Fill grid with sequence numbers
+                const used = [];
+                for (let i = 0; i < size * size && i < numbers.length; i++) {
+                    const idx = Math.floor(Math.random() * size * size);
+                    if (!used.includes(idx)) {
+                        used.push(idx);
+                        grid[idx] = numbers[i];
+                    }
+                }
+                
+                // Find missing positions in sequence
+                const positions = [];
+                for (let i = 0; i < size * size; i++) {
+                    if (grid[i] !== 0) {
+                        positions.push({ idx: i, val: grid[i], pos: positions.length });
+                    }
+                }
+                
+                // Make some positions targets (need to be filled)
+                const numTargets = Math.min(3, Math.floor(positions.length / 2));
+                for (let i = 0; i < numTargets; i++) {
+                    const pos = positions[Math.floor(Math.random() * positions.length)];
+                    if (!targets.some(t => t.idx === pos.idx)) {
+                        targets.push({ idx: pos.idx, val: pos.val });
+                        shown.push(pos.idx);
+                        grid[pos.idx] = 0; // Hide it
+                    }
+                }
+                
+                return {
+                    grid,
+                    shown: positions.filter(p => !targets.some(t => t.idx === p.idx)).map(p => p.idx),
+                    targets: targets.map(t => t.idx),
+                    targetValues: targets,
+                    rule: `${seqType.charAt(0).toUpperCase() + seqType.slice(1)} Sequence`,
+                    description: `Complete the ${seqType} sequence. Click the cells with missing numbers.`,
+                    hint: seqType === "fibonacci" ? "Each number is the sum of the two before it (1, 1, 2, 3, 5...)" :
+                          seqType === "primes" ? "Prime numbers: divisible only by 1 and themselves (2, 3, 5, 7...)" :
+                          "Perfect squares: 1²=1, 2²=4, 3²=9, 4²=16..."
+                };
+            },
+            
+            // Binary Logic: AND/OR/XOR
+            binary: (size) => {
+                const grid = Array(size * size).fill(0);
+                const targets = [];
+                const shown = [];
+                
+                const gates = ["AND", "OR", "XOR"];
+                const gate = gates[Math.floor(Math.random() * gates.length)];
+                
+                // Generate row and column seeds
+                const rowSeeds = Array(size).fill(0).map(() => Math.random() > 0.5 ? 1 : 0);
+                const colSeeds = Array(size).fill(0).map(() => Math.random() > 0.5 ? 1 : 0);
+                
+                // Apply gate logic
+                for (let row = 0; row < size; row++) {
+                    for (let col = 0; col < size; col++) {
+                        const idx = row * size + col;
+                        let result = 0;
+                        
+                        switch(gate) {
+                            case "AND":
+                                result = rowSeeds[row] & colSeeds[col];
+                                break;
+                            case "OR":
+                                result = rowSeeds[row] | colSeeds[col];
+                                break;
+                            case "XOR":
+                                result = rowSeeds[row] ^ colSeeds[col];
+                                break;
+                        }
+                        
+                        grid[idx] = result;
+                    }
+                }
+                
+                // Hide some results as targets
+                const litCells = [];
+                for (let i = 0; i < grid.length; i++) {
+                    if (grid[i] === 1) litCells.push(i);
+                }
+                
+                // Show row/column seeds
+                for (let i = 0; i < size; i++) {
+                    shown.push(i); // First row shows column seeds
+                    shown.push(i * size); // First column shows row seeds
+                }
+                
+                // Some results are shown, rest are targets
+                const numShown = Math.floor(litCells.length * 0.4);
+                for (let i = 0; i < numShown && i < litCells.length; i++) {
+                    const idx = Math.floor(Math.random() * litCells.length);
+                    if (!shown.includes(litCells[idx])) {
+                        shown.push(litCells[idx]);
+                    }
+                }
+                
+                targets.push(...litCells.filter(idx => !shown.includes(idx)));
+                
+                return {
+                    grid,
+                    shown,
+                    targets,
+                    rule: `${gate} Logic Gate`,
+                    description: `Cells light up based on ${gate} operation between row and column values.`,
+                    hint: gate === "AND" ? "Both inputs must be 1 (true) for output to be 1" :
+                          gate === "OR" ? "Output is 1 if either input is 1" :
+                          "Output is 1 if inputs are different (one 0, one 1)"
+                };
+            },
+            
+            // Color Chain: Gradient sequence
+            color: (size) => {
+                const grid = Array(size * size).fill(0);
+                const targets = [];
+                const shown = [];
+                
+                // Create color pattern (represented by numbers 1-5)
+                const colors = 5;
+                const pattern = [];
+                
+                // Generate pattern based on position
+                for (let i = 0; i < size * size; i++) {
+                    pattern.push((i % colors) + 1);
+                }
+                
+                // Shuffle pattern cells
+                const positions = Array(size * size).fill(0).map((_, i) => i);
+                for (let i = positions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [positions[i], positions[j]] = [positions[j], positions[i]];
+                }
+                
+                // Show first half
+                const numShown = Math.floor(size * size * 0.6);
+                for (let i = 0; i < numShown; i++) {
+                    const idx = positions[i];
+                    grid[idx] = pattern[idx];
+                    shown.push(idx);
+                }
+                
+                // Rest are targets
+                for (let i = numShown; i < size * size; i++) {
+                    const idx = positions[i];
+                    if (pattern[idx] > 0) {
+                        targets.push(idx);
+                    }
+                }
+                
+                return {
+                    grid,
+                    shown,
+                    targets,
+                    rule: "Color Chain",
+                    description: "Complete the color gradient sequence in order.",
+                    hint: "Follow the pattern in reading order (left to right, top to bottom)."
+                };
+            },
+            
+            // Row/Column Sum
+            sum: (size) => {
+                const grid = Array(size * size).fill(0);
+                const targets = [];
+                const shown = [];
+                
+                const targetSum = 10 + Math.floor(Math.random() * 10);
+                
+                // Fill grid ensuring rows/cols can sum to target
+                for (let row = 0; row < size; row++) {
+                    let rowSum = 0;
+                    for (let col = 0; col < size - 1; col++) {
+                        const val = Math.floor(Math.random() * targetSum / 2) + 1;
+                        grid[row * size + col] = val;
+                        rowSum += val;
+                    }
+                    // Last cell makes row sum to target
+                    const lastVal = targetSum - rowSum;
+                    if (lastVal > 0 && lastVal < 20) {
+                        grid[row * size + size - 1] = lastVal;
+                        targets.push(row * size + size - 1);
+                    }
+                }
+                
+                // Show all except target cells in last column
+                for (let i = 0; i < grid.length; i++) {
+                    if (grid[i] !== 0 && !targets.includes(i)) {
+                        shown.push(i);
+                    }
+                }
+                
+                return {
+                    grid,
+                    shown,
+                    targets,
+                    rule: "Equal Sum",
+                    description: `Each row must sum to ${targetSum}. Click cells to complete the rows.`,
+                    hint: `Calculate: ${targetSum} minus the sum of visible numbers in each row.`,
+                    targetSum
+                };
+            }
+        };
+
+        /* ============================================
+           AUDIO SYSTEM (Web Audio API)
+           ============================================ */
+        function initAudio() {
+            if (!gameState.audioContext) {
+                gameState.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSound(type) {
+            if (gameState.isMuted || !gameState.audioContext) return;
+            
+            const ctx = gameState.audioContext;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            
+            const now = ctx.currentTime;
+            
+            switch(type) {
+                case "correct":
+                    // Ascending beep 220Hz → 440Hz
+                    osc.frequency.setValueAtTime(220, now);
+                    osc.frequency.exponentialRampToValueAtTime(440, now + 0.1);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                    break;
+                    
+                case "wrong":
+                    // Low buzzer 150Hz
+                    osc.frequency.setValueAtTime(150, now);
+                    osc.type = "sawtooth";
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                    osc.start(now);
+                    osc.stop(now + 0.3);
+                    break;
+                    
+                case "warning":
+                    // Rapid pulsing beep
+                    osc.frequency.setValueAtTime(800, now);
+                    gain.gain.setValueAtTime(0.2, now);
+                    gain.gain.setValueAtTime(0, now + 0.05);
+                    gain.gain.setValueAtTime(0.2, now + 0.1);
+                    gain.gain.setValueAtTime(0, now + 0.15);
+                    osc.start(now);
+                    osc.stop(now + 0.2);
+                    break;
+                    
+                case "levelUp":
+                    // Triumphant 3-note chime
+                    [523.25, 659.25, 783.99].forEach((freq, i) => {
+                        const o = ctx.createOscillator();
+                        const g = ctx.createGain();
+                        o.connect(g);
+                        g.connect(ctx.destination);
+                        o.frequency.value = freq;
+                        g.gain.setValueAtTime(0.3, now + i * 0.15);
+                        g.gain.exponentialRampToValueAtTime(0.01, now + i * 0.15 + 0.4);
+                        o.start(now + i * 0.15);
+                        o.stop(now + i * 0.15 + 0.4);
+                    });
+                    break;
+                    
+                case "gameOver":
+                    // Descending wail
+                    osc.frequency.setValueAtTime(600, now);
+                    osc.frequency.exponentialRampToValueAtTime(100, now + 1);
+                    gain.gain.setValueAtTime(0.3, now);
+                    gain.gain.exponentialRampToValueAtTime(0.01, now + 1);
+                    osc.start(now);
+                    osc.stop(now + 1);
+                    break;
+            }
+        }
+
+        function toggleMute() {
+            gameState.isMuted = !gameState.isMuted;
+            document.getElementById("muteBtn").textContent = gameState.isMuted ? "🔇" : "🔊";
+            document.getElementById("pauseMuteText").textContent = gameState.isMuted ? "MUTE ON" : "MUTE OFF";
+        }
+
+        /* ============================================
+           PARTICLE BACKGROUND
+           ============================================ */
+        const particleCanvas = document.getElementById("particleCanvas");
+        const particleCtx = particleCanvas.getContext("2d");
+        let particles = [];
+        let animationId = null;
+
+        function resizeCanvas() {
+            particleCanvas.width = window.innerWidth;
+            particleCanvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * particleCanvas.width;
+                this.y = Math.random() * particleCanvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.opacity = Math.random() * 0.5 + 0.1;
+                this.color = Math.random() > 0.5 ? "#00f5d4" : "#f72585";
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                
+                if (this.x < 0 || this.x > particleCanvas.width) this.speedX *= -1;
+                if (this.y < 0 || this.y > particleCanvas.height) this.speedY *= -1;
+            }
+            
+            draw() {
+                particleCtx.beginPath();
+                particleCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                particleCtx.fillStyle = this.color;
+                particleCtx.globalAlpha = this.opacity;
+                particleCtx.fill();
+                particleCtx.globalAlpha = 1;
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const numParticles = Math.min(50, Math.floor((particleCanvas.width * particleCanvas.height) / 20000));
+            for (let i = 0; i < numParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            
+            // Draw connections
+            particles.forEach((p1, i) => {
+                particles.slice(i + 1).forEach(p2 => {
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (dist < 100) {
+                        particleCtx.beginPath();
+                        particleCtx.moveTo(p1.x, p1.y);
+                        particleCtx.lineTo(p2.x, p2.y);
+                        particleCtx.strokeStyle = "#00f5d4";
+                        particleCtx.globalAlpha = (1 - dist / 100) * 0.2;
+                        particleCtx.stroke();
+                        particleCtx.globalAlpha = 1;
+                    }
+                });
+            });
+            
+            animationId = requestAnimationFrame(animateParticles);
+        }
+
+        /* ============================================
+           GAME LOGIC
+           ============================================ */
+        function selectDifficulty(diff) {
+            gameState.difficulty = diff;
+            document.querySelectorAll(".difficulty-buttons .btn").forEach(btn => {
+                btn.classList.remove("active");
+                if (btn.dataset.diff === diff) btn.classList.add("active");
+            });
+        }
+
+        function getDifficultySettings(level) {
+            if (level <= 3) {
+                return { gridSize: 4, timeLimit: 35, name: "EASY" };
+            } else if (level <= 7) {
+                return { gridSize: 5, timeLimit: 25, name: "MEDIUM" };
+            } else {
+                return { gridSize: 6, timeLimit: 15, name: "HARD" };
+            }
+        }
+
+        function startGame() {
+            initAudio();
+            
+            // Reset game state
+            gameState.level = 1;
+            gameState.score = 0;
+            gameState.lives = 3;
+            gameState.combo = 1;
+            gameState.maxCombo = 1;
+            gameState.correctClicks = 0;
+            gameState.totalClicks = 0;
+            gameState.isPlaying = true;
+            gameState.isPaused = false;
+            
+            // Load best score
+            const saved = localStorage.getItem("neuralGridBestScore");
+            if (saved) gameState.bestScore = parseInt(saved);
+            
+            // Apply difficulty
+            const settings = getDifficultySettings(1);
+            gameState.gridSize = settings.gridSize;
+            gameState.timeLimit = settings.timeLimit;
+            
+            // Update UI
+            updateHUD();
+            updateDifficultyIndicator(settings.name);
+            
+            // Switch to game screen
+            showScreen("gameScreen");
+            
+            // Generate first level
+            generateLevel();
+        }
+
+        function updateDifficultyIndicator(name) {
+            const indicator = document.getElementById("diffIndicator");
+            indicator.textContent = name;
+            indicator.className = "difficulty-indicator" + (name === "HARD" ? " hard" : "");
+        }
+
+        function generateLevel() {
+            const settings = getDifficultySettings(gameState.level);
+            gameState.gridSize = settings.gridSize;
+            gameState.timeLimit = settings.timeLimit;
+            gameState.timeRemaining = settings.timeLimit;
+            gameState.hintsRemaining = 1;
+            gameState.clickedCells = [];
+            
+            updateDifficultyIndicator(settings.name);
+            
+            // Select pattern type based on level
+            let availableTypes = ["symmetry"];
+            if (gameState.level >= 2) availableTypes.push("sequence");
+            if (gameState.level >= 3) availableTypes.push("sum");
+            if (gameState.level >= 4) availableTypes.push("color");
+            if (gameState.level >= 5) availableTypes.push("binary");
+            
+            gameState.patternType = availableTypes[Math.floor(Math.random() * availableTypes.length)];
+            
+            // Generate pattern
+            gameState.currentPattern = patternGenerators[gameState.patternType](gameState.gridSize);
+            gameState.targetCells = gameState.currentPattern.targets;
+            
+            // Render grid
+            renderGrid();
+            updateRulePanel();
+            
+            // Start timer
+            startTimer();
+            
+            // Update hint button
+            document.getElementById("hintBtn").textContent = `💡 HINT (${gameState.hintsRemaining})`;
+            document.getElementById("hintBtn").disabled = false;
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById("gameGrid");
+            grid.innerHTML = "";
+            grid.style.gridTemplateColumns = `repeat(${gameState.gridSize}, 1fr)`;
+            
+            const { cells, shown, grid: values } = gameState.currentPattern;
+            
+            for (let i = 0; i < gameState.gridSize * gameState.gridSize; i++) {
+                const cell = document.createElement("div");
+                cell.className = "grid-cell";
+                cell.dataset.index = i;
+                
+                // Show initial pattern
+                if (shown.includes(i)) {
+                    cell.classList.add("lit");
+                    if (values[i] > 1) {
+                        cell.innerHTML = `<span class="number">${values[i]}</span>`;
+                    }
+                }
+                
+                // Handle click
+                cell.addEventListener("click", () => handleCellClick(i, cell));
+                
+                grid.appendChild(cell);
+            }
+        }
+
+        function updateRulePanel() {
+            const pattern = gameState.currentPattern;
+            document.getElementById("ruleTitle").textContent = pattern.rule;
+            document.getElementById("ruleDescription").textContent = pattern.description;
+        }
+
+        function handleCellClick(index, cellElement) {
+            if (!gameState.isPlaying || gameState.isPaused) return;
+            if (gameState.clickedCells.includes(index)) return;
+            
+            gameState.totalClicks++;
+            
+            const isTarget = gameState.targetCells.includes(index);
+            
+            if (isTarget) {
+                // Correct!
+                gameState.correctClicks++;
+                gameState.clickedCells.push(index);
+                
+                cellElement.classList.add("correct");
+                if (gameState.currentPattern.grid[index] > 0) {
+                    cellElement.innerHTML = `<span class="number">${gameState.currentPattern.grid[index]}</span>`;
+                }
+                
+                // Score
+                const points = 100 * gameState.combo;
+                gameState.score += points;
+                
+                // Combo
+                gameState.combo = Math.min(gameState.combo + 1, 4);
+                if (gameState.combo > gameState.maxCombo) gameState.maxCombo = gameState.combo;
+                
+                // Visual feedback
+                showFloatingText(cellElement, `+${points}`, "positive");
+                playSound("correct");
+                
+                // Check level complete
+                if (gameState.clickedCells.length === gameState.targetCells.length) {
+                    completeLevel();
+                }
+            } else {
+                // Wrong!
+                gameState.lives--;
+                gameState.combo = 1;
+                
+                cellElement.classList.add("wrong");
+                gameState.score = Math.max(0, gameState.score - 30);
+                
+                // Visual feedback
+                showFloatingText(cellElement, "-30", "negative");
+                triggerScreenFlash();
+                playSound("wrong");
+                
+                setTimeout(() => {
+                    cellElement.classList.remove("wrong");
+                }, 500);
+                
+                // Check game over
+                if (gameState.lives <= 0) {
+                    gameOver();
+                    return;
+                }
+            }
+            
+            updateHUD();
+        }
+
+        function showFloatingText(element, text, type) {
+            const rect = element.getBoundingClientRect();
+            const floatEl = document.createElement("div");
+            floatEl.className = `floating-text ${type}`;
+            floatEl.textContent = text;
+            floatEl.style.left = `${rect.left + rect.width / 2}px`;
+            floatEl.style.top = `${rect.top}px`;
+            document.body.appendChild(floatEl);
+            
+            setTimeout(() => floatEl.remove(), 1000);
+        }
+
+        function triggerScreenFlash() {
+            const flash = document.getElementById("screenFlash");
+            flash.classList.add("active");
+            setTimeout(() => flash.classList.remove("active"), 300);
+        }
+
+        function startTimer() {
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+            }
+            
+            gameState.timerStartTime = Date.now();
+            const timerRing = document.getElementById("timerRing");
+            const timerText = document.getElementById("timerText");
+            const circumference = 2 * Math.PI * 35;
+            
+            timerRing.style.strokeDasharray = circumference;
+            timerRing.style.strokeDashoffset = 0;
+            timerRing.classList.remove("timer-warning", "timer-danger");
+            
+            gameState.timerInterval = setInterval(() => {
+                if (gameState.isPaused) return;
+                
+                const elapsed = (Date.now() - gameState.timerStartTime) / 1000;
+                gameState.timeRemaining = Math.max(0, gameState.timeLimit - elapsed);
+                
+                // Update ring
+                const progress = gameState.timeRemaining / gameState.timeLimit;
+                const offset = circumference * (1 - progress);
+                timerRing.style.strokeDashoffset = offset;
+                
+                // Update text
+                timerText.textContent = Math.ceil(gameState.timeRemaining);
+                
+                // Warning colors
+                if (gameState.timeRemaining <= 3) {
+                    timerRing.classList.add("timer-danger");
+                    playSound("warning");
+                } else if (gameState.timeRemaining <= 5) {
+                    timerRing.classList.add("timer-warning");
+                }
+                
+                // Time"s up
+                if (gameState.timeRemaining <= 0) {
+                    clearInterval(gameState.timerInterval);
+                    gameState.lives--;
+                    if (gameState.lives <= 0) {
+                        gameOver();
+                    } else {
+                        // Retry level
+                        generateLevel();
+                        updateHUD();
+                    }
+                }
+            }, 100);
+        }
+
+        function completeLevel() {
+            clearInterval(gameState.timerInterval);
+            
+            // Time bonus
+            const timeBonus = gameState.timeRemaining > gameState.timeLimit / 2 ? 50 : 0;
+            gameState.score += timeBonus;
+            
+            // Play level up sound
+            playSound("levelUp");
+            
+            // Neural pulse animation
+            triggerNeuralPulse();
+            
+            // Show level up screen
+            setTimeout(() => {
+                document.getElementById("completedLevel").textContent = gameState.level;
+                document.getElementById("levelScore").textContent = `+${gameState.score - (gameState.score - gameState.combo * 100 * gameState.clickedCells.length)}`;
+                document.getElementById("timeBonus").textContent = `+${timeBonus}`;
+                document.getElementById("nextLevel").textContent = gameState.level + 1;
+                
+                gameState.level++;
+                showScreen("levelUpScreen");
+            }, 1000);
+        }
+
+        function triggerNeuralPulse() {
+            const grid = document.getElementById("gameGrid");
+            const pulse = document.createElement("div");
+            pulse.className = "neural-pulse";
+            pulse.style.left = "50%";
+            pulse.style.top = "50%";
+            pulse.style.transform = "translate(-50%, -50%)";
+            grid.appendChild(pulse);
+            
+            setTimeout(() => pulse.remove(), 1000);
+        }
+
+        function nextLevel() {
+            showScreen("gameScreen");
+            generateLevel();
+            updateHUD();
+        }
+
+        function gameOver() {
+            clearInterval(gameState.timerInterval);
+            gameState.isPlaying = false;
+            
+            // Play game over sound
+            playSound("gameOver");
+            
+            // Save high score
+            if (gameState.score > gameState.bestScore) {
+                gameState.bestScore = gameState.score;
+                localStorage.setItem("neuralGridBestScore", gameState.bestScore);
+            }
+            
+            // Calculate accuracy
+            const accuracy = gameState.totalClicks > 0 
+                ? Math.round((gameState.correctClicks / gameState.totalClicks) * 100) 
+                : 0;
+            
+            // Update game over screen
+            document.getElementById("finalScore").textContent = gameState.score;
+            document.getElementById("finalLevel").textContent = gameState.level;
+            document.getElementById("finalAccuracy").textContent = `${accuracy}%`;
+            document.getElementById("finalCombo").textContent = `x${gameState.maxCombo}`;
+            
+            showScreen("gameOverScreen");
+        }
+
+        function updateHUD() {
+            document.getElementById("score").textContent = gameState.score;
+            document.getElementById("level").textContent = gameState.level;
+            document.getElementById("lives").textContent = "❤️".repeat(gameState.lives);
+            document.getElementById("combo").textContent = `x${gameState.combo}`;
+            document.getElementById("bestScoreDisplay").textContent = `BEST SCORE: ${Math.max(gameState.bestScore, gameState.score)}`;
+        }
+
+        function useHint() {
+            if (gameState.hintsRemaining <= 0 || !gameState.isPlaying || gameState.isPaused) return;
+            
+            // Find unclicked target
+            const remainingTargets = gameState.targetCells.filter(t => !gameState.clickedCells.includes(t));
+            if (remainingTargets.length === 0) return;
+            
+            const hintTarget = remainingTargets[Math.floor(Math.random() * remainingTargets.length)];
+            const cells = document.querySelectorAll(".grid-cell");
+            const cell = cells[hintTarget];
+            
+            cell.classList.add("hint");
+            gameState.hintsRemaining--;
+            document.getElementById("hintBtn").textContent = `💡 HINT (${gameState.hintsRemaining})`;
+            document.getElementById("hintBtn").disabled = true;
+            
+            setTimeout(() => {
+                cell.classList.remove("hint");
+            }, 2000);
+        }
+
+        function pauseGame() {
+            if (!gameState.isPlaying) return;
+            gameState.isPaused = true;
+            document.getElementById("pauseMenu").classList.add("active");
+        }
+
+        function resumeGame() {
+            gameState.isPaused = false;
+            document.getElementById("pauseMenu").classList.remove("active");
+        }
+
+        function restartGame() {
+            document.getElementById("pauseMenu").classList.remove("active");
+            startGame();
+        }
+
+        function backToMenu() {
+            gameState.isPlaying = false;
+            gameState.isPaused = false;
+            clearInterval(gameState.timerInterval);
+            document.getElementById("pauseMenu").classList.remove("active");
+            showScreen("startScreen");
+            updateHUD();
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+            document.getElementById(screenId).classList.add("active");
+            gameState.currentScreen = screenId;
+        }
+
+        function showHowToPlay() {
+            document.getElementById("howToModal").classList.add("active");
+        }
+
+        function closeHowToPlay() {
+            document.getElementById("howToModal").classList.remove("active");
+        }
+
+        // Keyboard controls
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") {
+                if (gameState.isPlaying && !gameState.isPaused) {
+                    pauseGame();
+                } else if (gameState.isPaused) {
+                    resumeGame();
+                }
+            }
+        });
+
+        // Initialize
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+
+        // Load initial best score
+        const saved = localStorage.getItem("neuralGridBestScore");
+        if (saved) {
+            gameState.bestScore = parseInt(saved);
+            updateHUD();
+        }
+    </script>
+</body>
+</html>

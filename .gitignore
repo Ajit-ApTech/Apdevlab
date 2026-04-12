@@ -1,0 +1,10 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Backend (deployed separately on Render)
+backend/
+
+# Editor
+.vscode/
+*.swp

@@ -15,6 +15,10 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://apdevlab.com">
 
+  <!-- ── Favicon ──────────────────────────────────────────── -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%230d1117'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='900' font-size='28' fill='%2306B6D4'%3E%26lt%3B%2F%26gt%3B%3C/text%3E%3C/svg%3E">
+
   <!-- ── Open Graph ────────────────────────────────────────── -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Apdevlab — Premium App &amp; Web Development Studio">
@@ -305,25 +309,25 @@
         <p class="section-title" aria-hidden="true">// <span>portfolio</span>.filter(p =&gt; p.status === "Deployed")
         </p>
         <h2 id="portfolio-heading" class="section-headline">Live &amp; Shipped</h2>
-        <p class="portfolio-subtitle">// Showing 3 of 3 projects — all live and deployed</p>
+        <p class="portfolio-subtitle" id="portfolio-subtitle">// Showing 3 of 3 projects — all live and deployed</p>
 
-        <div class="portfolio-grid">
+        <div class="portfolio-grid" id="portfolio-grid">
 
           <!-- Project 1 — Curry Crave -->
           <article class="project-card card-3d" data-reveal-stagger>
             <div class="project-image-wrapper">
-              <img src="https://picsum.photos/seed/curry-crave/800/500" alt="Curry Crave — food delivery app screenshot"
-                width="800" height="500" loading="lazy" decoding="async">
+              <img src="./assets/images/CurryCrave.png" alt="Curry Crave — food delivery app screenshot" width="800"
+                height="500" loading="lazy" decoding="async">
             </div>
             <div class="project-body">
               <div class="project-meta">
                 <span class="status-badge"><span class="dot-green" aria-hidden="true">●</span> Deployed</span>
                 <span class="commit">commit: a4f2b8c</span>
-                <span class="date-label">Apr 2025</span>
+                <span class="date-label">Apr 2026</span>
               </div>
               <h3>Curry Crave</h3>
               <p class="project-type">Website + Mobile App + Admin Panel</p>
-              <p class="project-desc">Real-time food delivery system with multi-restaurant support, live order tracking,
+              <p class="project-desc">Real-time food delivery system with restaurant support, live order tracking,
                 payment gateway, and a full admin dashboard.</p>
               <div class="project-tags" aria-label="Technologies used">
                 <span class="tag">React Native</span>
@@ -331,10 +335,11 @@
                 <span class="tag">MongoDB</span>
                 <span class="tag">Stripe</span>
                 <span class="tag">Redux</span>
+                <span class="tag">flutter</span>
               </div>
               <div class="project-actions">
-                <a href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" data-cursor="pointer"
-                  aria-label="View Curry Crave live demo">
+                <a href="https://curry.gt.tc/" target="_blank" rel="noopener noreferrer" class="btn-primary"
+                  data-cursor="pointer" aria-label="View Curry Crave live demo">
                   <i data-lucide="external-link" aria-hidden="true"></i> Live Demo
                 </a>
                 <a href="#" class="btn-ghost" data-cursor="pointer" aria-label="View Curry Crave case study">
@@ -344,36 +349,35 @@
             </div>
           </article>
 
-          <!-- Project 2 — Nurtivew -->
+          <!-- Project 2 — Neural Grid -->
           <article class="project-card card-3d" data-reveal-stagger>
             <div class="project-image-wrapper">
-              <img src="https://picsum.photos/seed/nurtivew/800/500"
-                alt="Nurtivew — AI nutrition tracking app screenshot" width="800" height="500" loading="lazy"
-                decoding="async">
+              <img src="./assets/images/Neuralgrid.png" alt="Neural Grid — Brain Boosting Logic Game screenshot"
+                width="800" height="500" loading="lazy" decoding="async">
             </div>
             <div class="project-body">
               <div class="project-meta">
                 <span class="status-badge"><span class="dot-green" aria-hidden="true">●</span> Deployed</span>
-                <span class="commit">commit: d7e1f3a</span>
-                <span class="date-label">Mar 2025</span>
+                <span class="commit">commit: b2e9c7f</span>
+                <span class="date-label">Mar 2026</span>
               </div>
-              <h3>Nurtivew</h3>
-              <p class="project-type">Mobile App (iOS + Android)</p>
-              <p class="project-desc">AI-powered nutrition tracking and meal planning with health analytics dashboards
-                and personalised dietary recommendation engine.</p>
+              <h3>Neural Grid</h3>
+              <p class="project-type">Browser Game — Logic &amp; Memory</p>
+              <p class="project-desc">A brain-boosting logic game featuring memory pattern challenges, difficulty
+                levels, a live scoring system, combo multipliers, and neon-lit grid mechanics.</p>
               <div class="project-tags" aria-label="Technologies used">
-                <span class="tag">Flutter</span>
-                <span class="tag">Firebase</span>
-                <span class="tag">Python</span>
-                <span class="tag">HealthKit</span>
-                <span class="tag">TensorFlow Lite</span>
+                <span class="tag">Vanilla JS</span>
+                <span class="tag">HTML5</span>
+                <span class="tag">CSS3</span>
+                <span class="tag">Canvas API</span>
+                <span class="tag">Web Audio</span>
               </div>
               <div class="project-actions">
-                <a href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" data-cursor="pointer"
-                  aria-label="View Nurtivew live demo">
-                  <i data-lucide="external-link" aria-hidden="true"></i> Live Demo
+                <a href="./assets/Neural Grid/index.html" target="_blank" rel="noopener noreferrer" class="btn-primary"
+                  data-cursor="pointer" aria-label="Play Neural Grid live demo">
+                  <i data-lucide="gamepad-2" aria-hidden="true"></i> Play Now
                 </a>
-                <a href="#" class="btn-ghost" data-cursor="pointer" aria-label="View Nurtivew case study">
+                <a href="#" class="btn-ghost" data-cursor="pointer" aria-label="View Neural Grid case study">
                   <i data-lucide="code-2" aria-hidden="true"></i> Case Study
                 </a>
               </div>
@@ -383,15 +387,14 @@
           <!-- Project 3 — Adhvik Infra -->
           <article class="project-card card-3d" data-reveal-stagger>
             <div class="project-image-wrapper">
-              <img src="https://picsum.photos/seed/adhvik-infra/800/500"
-                alt="Adhvik Infra — construction company website screenshot" width="800" height="500" loading="lazy"
-                decoding="async">
+              <img src="./assets/images/Adhvik.png" alt="Adhvik Infra — construction company website screenshot"
+                width="800" height="500" loading="lazy" decoding="async">
             </div>
             <div class="project-body">
               <div class="project-meta">
                 <span class="status-badge"><span class="dot-green" aria-hidden="true">●</span> Deployed</span>
                 <span class="commit">commit: f9c3a5e</span>
-                <span class="date-label">Feb 2025</span>
+                <span class="date-label">Feb 2026</span>
               </div>
               <h3>Adhvik Infra</h3>
               <p class="project-type">Premium Website + BOQ Estimation Tool</p>
@@ -879,6 +882,14 @@
       <a href="#about">About</a>
       <a href="#contact">Contact</a>
     </nav>
+
+    <!-- Admin access link — subtle, for site owner -->
+    <div class="footer-admin-link">
+      <a href="https://api.apdevlab.com/admin" target="_blank" rel="noopener noreferrer" id="admin-portal-link" aria-label="Admin portal login" onclick="if(location.hostname==='localhost'||location.hostname==='127.0.0.1'){this.href='http://localhost:3001/admin';}">
+        <span class="admin-link-icon">⚙</span>
+        <span class="admin-link-text">Admin Portal</span>
+      </a>
+    </div>
   </footer>
 
   <!-- ── GSAP CDN (after DOM) ──────────────────────────── -->
@@ -893,6 +904,54 @@
   <!-- ── Lucide init (fallback if CDN deferred) ───────── -->
   <script>
     if (typeof lucide !== 'undefined') lucide.createIcons();
+  </script>
+
+
+  <!-- ── Dynamic Portfolio Loader ──────────────────────── -->
+  <script>
+  (async function loadPortfolioFromAPI() {
+    // Auto-detect production vs local dev
+    const BACKEND  = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:3001'
+      : 'https://api.apdevlab.com';
+    const grid     = document.getElementById('portfolio-grid');
+    const subtitle = document.getElementById('portfolio-subtitle');
+    if (!grid) return;
+
+    try {
+      const res  = await fetch(BACKEND + '/api/projects', { signal: AbortSignal.timeout(4000) });
+      if (!res.ok) return;
+      const data = await res.json();
+      const projects = (data.data || []).filter(p => p.status !== 'Archived');
+      if (!projects.length) return;
+
+      function imgSrc(f) {
+        if (!f) return '';
+        if (f.startsWith('http') || f.startsWith('./') || f.startsWith('/')) return f;
+        return BACKEND + '/uploads/' + f;
+      }
+
+      if (subtitle) subtitle.textContent = '// Showing ' + projects.length + ' of ' + projects.length + ' projects — all live and deployed';
+
+      grid.innerHTML = projects.map(function(p) {
+        var imgHtml = p.image
+          ? '<img src="' + imgSrc(p.image) + '" alt="' + p.title + ' screenshot" width="800" height="500" loading="lazy" decoding="async">'
+          : '<div style="width:100%;height:220px;background:#161b22;display:flex;align-items:center;justify-content:center;color:#7d8590;font-size:.8rem;">No preview</div>';
+        var tagsHtml = p.tags.map(function(t){ return '<span class="tag">' + t + '</span>'; }).join('');
+        var liveBtn  = p.liveUrl
+          ? '<a href="' + p.liveUrl + '" target="_blank" rel="noopener noreferrer" class="btn-primary" data-cursor="pointer"><i data-lucide="external-link" aria-hidden="true"></i> Live Demo</a>'
+          : '';
+        var caseBtn  = '<a href="' + (p.caseStudyUrl || '#') + '" class="btn-ghost" data-cursor="pointer"><i data-lucide="code-2" aria-hidden="true"></i> Case Study</a>';
+        var commit   = p.commitHash ? '<span class="commit">commit: ' + p.commitHash + '</span>' : '';
+        var dateL    = p.dateLabel  ? '<span class="date-label">' + p.dateLabel + '</span>' : '';
+        return '<article class="project-card card-3d" data-reveal-stagger><div class="project-image-wrapper">' + imgHtml + '</div><div class="project-body"><div class="project-meta"><span class="status-badge"><span class="dot-green" aria-hidden="true">●</span> ' + p.status + '</span>' + commit + dateL + '</div><h3>' + p.title + '</h3><p class="project-type">' + p.type + '</p><p class="project-desc">' + p.description + '</p><div class="project-tags" aria-label="Technologies used">' + tagsHtml + '</div><div class="project-actions">' + liveBtn + caseBtn + '</div></div></article>';
+      }).join('');
+
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+    } catch (err) {
+      // Backend offline – static fallback cards stay visible
+    }
+  })();
   </script>
 
 </body>

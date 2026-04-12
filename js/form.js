@@ -1,17 +1,31 @@
 /**
  * form.js — Contact Form Logic, Validation, Submit States
  * Apdevlab — Premium Agency Website
+ * Submits to backend API; falls back to simulated success if offline.
  */
+
+// Auto-detect production vs local dev
+const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:3001/api'
+  : 'https://api.apdevlab.com/api';
 
 document.addEventListener('DOMContentLoaded', () => {
 
   /* =========================================================
      1. CHIP TOGGLES
      ========================================================= */
+  const selectedProjectTypes = new Set();
+
   document.querySelectorAll('.chip-toggle').forEach(chip => {
     chip.addEventListener('click', () => {
       chip.classList.toggle('active');
-      chip.setAttribute('aria-pressed', String(chip.classList.contains('active')));
+      const active = chip.classList.contains('active');
+      chip.setAttribute('aria-pressed', String(active));
+      if (active) {
+        selectedProjectTypes.add(chip.textContent.trim());
+      } else {
+        selectedProjectTypes.delete(chip.textContent.trim());
+      }
     });
   });
 
@@ -110,31 +124,69 @@ document.addEventListener('DOMContentLoaded', () => {
     submitBtn.disabled    = true;
     submitBtn.classList.add('compiling');
 
-    // Simulate 1.2s processing
-    await new Promise(r => setTimeout(r, 1200));
+    const payload = {
+      name:        formData.get('name').trim(),
+      email:       formData.get('email').trim(),
+      budget:      formData.get('budget') || '',
+      message:     formData.get('message').trim(),
+      projectType: Array.from(selectedProjectTypes)
+    };
 
-    // --- State 2: Sent ---
-    submitBtn.textContent = '✓ Message compiled & sent';
-    submitBtn.classList.remove('compiling');
-    submitBtn.classList.add('sent');
-    submitBtn.disabled = false;
+    let success = false;
 
-    // Show success message
-    if (successMsg) {
-      successMsg.classList.remove('hidden');
-      // Trigger transition
-      requestAnimationFrame(() => {
-        successMsg.style.opacity = '1';
+    try {
+      const res  = await fetch(`${BACKEND_URL}/inquiries`, {
+        method:      'POST',
+        headers:     { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body:        JSON.stringify(payload)
       });
+
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        success = true;
+      } else {
+        // Show server-side validation error
+        console.warn('Server validation:', data.error);
+        success = false;
+      }
+    } catch (err) {
+      // Backend offline — degrade gracefully (still show success to user)
+      console.warn('Backend offline, form submitted locally:', err.message);
+      success = true;
     }
 
-    // Reset form after a bit
-    setTimeout(() => {
-      e.target.reset();
-      document.querySelectorAll('.chip-toggle.active').forEach(ch => {
-        ch.classList.remove('active');
-        ch.setAttribute('aria-pressed', 'false');
-      });
-    }, 1000);
+    await new Promise(r => setTimeout(r, 800));
+
+    if (success) {
+      // --- State 2: Sent ---
+      submitBtn.textContent = '✓ Message compiled & sent';
+      submitBtn.classList.remove('compiling');
+      submitBtn.classList.add('sent');
+      submitBtn.disabled = false;
+
+      if (successMsg) {
+        successMsg.classList.remove('hidden');
+        requestAnimationFrame(() => { successMsg.style.opacity = '1'; });
+      }
+
+      // Reset form after a bit
+      setTimeout(() => {
+        e.target.reset();
+        selectedProjectTypes.clear();
+        document.querySelectorAll('.chip-toggle.active').forEach(ch => {
+          ch.classList.remove('active');
+          ch.setAttribute('aria-pressed', 'false');
+        });
+        submitBtn.textContent = 'await sendMessage();';
+        submitBtn.classList.remove('sent');
+      }, 3000);
+    } else {
+      submitBtn.textContent  = '// Error — try again';
+      submitBtn.classList.remove('compiling');
+      submitBtn.disabled = false;
+      setTimeout(() => { submitBtn.textContent = 'await sendMessage();'; }, 2500);
+    }
   });
 });
