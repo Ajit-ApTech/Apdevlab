@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ── SEO Meta ─────────────────────────────────────────── -->
+  <title>Apdevlab | Premium App &amp; Web Development Studio — Hyderabad</title>
+  <meta name="description"
+    content="Apdevlab — Premium mobile app and web development studio based in Hyderabad, India. We build scalable apps, websites, and AI-powered products.">
+  <meta name="keywords"
+    content="mobile app development Hyderabad, web development India, React Native Flutter Next.js UI UX design Apdevlab app developer">
+  <meta name="author" content="Apdevlab">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://apdevlab.com">
+
+  <!-- ── Open Graph ────────────────────────────────────────── -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Apdevlab — Premium App &amp; Web Development Studio">
+  <meta property="og:description"
+    content="We build mobile apps, websites, and AI-powered products that ship fast and scale further.">
+  <meta property="og:url" content="https://apdevlab.com">
+  <meta property="og:image" content="https://apdevlab.com/assets/images/og-image.jpg">
+
+  <!-- ── Twitter Card ─────────────────────────────────────── -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Apdevlab — Premium App &amp; Web Development Studio">
+  <meta name="twitter:description"
+    content="Mobile apps, web platforms, AI integrations — built and shipped from Hyderabad.">
+
+  <!-- ── JSON-LD Structured Data ──────────────────────────── -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    "name": "Apdevlab",
+    "url": "https://apdevlab.com",
+    "email": "hello@apdevlab.com",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Hyderabad",
+      "addressCountry": "IN"
+    },
+    "description": "Premium mobile app and web development studio.",
+    "serviceType": ["Mobile App Development","Web Development","UI/UX Design","AI Integration"]
+  }
+  </script>
+
+  <!-- ── Fonts ────────────────────────────────────────────── -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+    rel="stylesheet">
+
+  <!-- ── Tailwind v4 Play CDN ─────────────────────────────── -->
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+
+  <!-- ── Lucide Icons ─────────────────────────────────────── -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <!-- ── Custom Styles ────────────────────────────────────── -->
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+  <!-- Skip link for accessibility -->
+  <a href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[200] focus:bg-cyan-500 focus:text-white focus:px-4 focus:py-2 focus:rounded-lg">Skip
+    to content</a>
+
+  <!-- Custom cursor (hidden on touch via CSS) -->
+  <div class="custom-cursor" id="cursor" aria-hidden="true"></div>
+
+  <!-- Mobile Navigation Overlay -->
+  <div id="mobile-overlay" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+
+    <!-- Decorative background glow -->
+    <div class="mob-nav-glow" aria-hidden="true"></div>
+
+    <!-- Top bar -->
+    <div class="mob-nav-topbar">
+      <!-- Logo replica -->
+      <span class="mob-nav-logo">
+        <span class="logo-bracket">&lt;</span>Apdevlab<span class="logo-bracket">/&gt;</span>
+      </span>
+      <button id="close-nav-btn" aria-label="Close navigation">
+        <i data-lucide="x" aria-hidden="true"></i>
+      </button>
+    </div>
+
+    <!-- Nav links -->
+    <nav class="mob-nav-links" aria-label="Mobile navigation menu">
+      <a class="mobile-nav-link" href="#home">
+        <span class="mob-num">01</span>
+        <span class="mob-label">// home</span>
+        <span class="mob-title">Home</span>
+      </a>
+      <a class="mobile-nav-link" href="#services">
+        <span class="mob-num">02</span>
+        <span class="mob-label">// services</span>
+        <span class="mob-title">Services</span>
+      </a>
+      <a class="mobile-nav-link" href="#portfolio">
+        <span class="mob-num">03</span>
+        <span class="mob-label">// portfolio</span>
+        <span class="mob-title">Portfolio</span>
+      </a>
+      <a class="mobile-nav-link" href="#tech">
+        <span class="mob-num">04</span>
+        <span class="mob-label">// tech</span>
+        <span class="mob-title">Tech Stack</span>
+      </a>
+      <a class="mobile-nav-link" href="#about">
+        <span class="mob-num">05</span>
+        <span class="mob-label">// about</span>
+        <span class="mob-title">About</span>
+      </a>
+      <a class="mobile-nav-link" href="#contact">
+        <span class="mob-num">06</span>
+        <span class="mob-label">// contact</span>
+        <span class="mob-title">Contact</span>
+      </a>
+    </nav>
+
+    <!-- Bottom status bar -->
+    <div class="mob-nav-footer">
+      <span class="mob-status">
+        <span class="dot-pulse" aria-hidden="true"></span>
+        Available for projects
+      </span>
+      <span class="mob-tz">IST · UTC+5:30</span>
+    </div>
+
+  </div>
+
+  <!-- ════════════════════════════════════════════════════════
+       HEADER
+       ════════════════════════════════════════════════════════ -->
+  <header id="site-header" role="banner">
+    <div class="header-inner">
+
+      <!-- Logo -->
+      <a href="#home" aria-label="Apdevlab home" class="logo-link" id="logo-link">
+        <span class="logo-bracket" id="logo-bracket-open">&lt;</span><span class="logo-name" id="logo-text"></span><span
+          class="logo-cursor-blink" id="logo-cursor" aria-hidden="true">|</span><span class="logo-bracket"
+          id="logo-bracket-close">/&gt;</span>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav" aria-label="Primary navigation">
+        <a href="#home" class="nav-link">Home</a>
+        <a href="#services" class="nav-link">Services</a>
+        <a href="#portfolio" class="nav-link">Portfolio</a>
+        <a href="#tech" class="nav-link">Tech Stack</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#contact" class="nav-contact-btn" data-cursor="pointer">Contact Us</a>
+      </nav>
+
+      <!-- Hamburger (mobile only) -->
+      <button id="hamburger-btn" aria-expanded="false" aria-controls="mobile-overlay" aria-label="Open navigation">
+        <i data-lucide="menu" aria-hidden="true"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════
+       MAIN CONTENT
+       ════════════════════════════════════════════════════════ -->
+  <main id="main-content">
+
+    <!-- ══════════════════════════════════════════════════════
+         SECTION 1 — HERO
+         ══════════════════════════════════════════════════════ -->
+    <section id="home" aria-labelledby="hero-heading">
+      <!-- Particle canvas -->
+      <canvas id="canvas-hero" class="particle-canvas" aria-hidden="true"></canvas>
+      <!-- Gradient overlay -->
+      <div class="hero-gradient-overlay" aria-hidden="true"></div>
+
+      <div class="hero-content">
+        <!-- Eyebrow -->
+        <p class="hero-eyebrow" aria-hidden="true">
+          <span class="ey-slash">//</span> <span class="ey-text">initializing </span><span
+            class="ey-name">apdevlab</span><span class="ey-ext">.exe</span>
+        </p>
+
+        <!-- H1 — unique on this page -->
+        <h1 id="hero-heading" class="hero-headline" data-reveal>
+          <span class="hl-line hl-idea">Your Idea.</span>
+          <span class="hl-line hl-code">Our Code.</span>
+          <span class="hl-line hl-infinite">Infinite Possibilities.</span>
+        </h1>
+
+        <!-- Typewriter -->
+        <p class="typewriter-line" aria-live="polite">
+          const tagline = "<span id="typewriter-text"></span><span id="typewriter-cursor" aria-hidden="true">|</span>";
+        </p>
+
+        <!-- CTA Row -->
+        <div class="cta-row">
+          <a href="#portfolio" class="btn-primary cta-glow" data-cursor="pointer">
+            View Our Work
+          </a>
+          <a href="#contact" class="btn-ghost" data-cursor="pointer">
+            Start a Project →
+          </a>
+        </div>
+
+        <!-- Trust Stats -->
+        <div class="trust-stats" aria-label="Key metrics">
+          <span class="trust-stat"><span data-countup="12">0</span>+ Projects</span>
+          <span class="trust-stat"><span data-countup="3">0</span> Countries</span>
+          <span class="trust-stat"><span data-countup="100">0</span>% Satisfaction</span>
+          <span class="trust-stat">~<span class="stat-24h">24h</span> Response</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-sep" aria-hidden="true"></div>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECTION 2 — SERVICES
+         ══════════════════════════════════════════════════════ -->
+    <section id="services" aria-labelledby="services-heading">
+      <div class="section-inner">
+        <p class="section-title" aria-hidden="true">// <span>services</span>.map(s =&gt; s.name)</p>
+        <h2 id="services-heading" class="section-headline">What We Build</h2>
+
+        <div class="services-grid">
+
+          <!-- Card 1 — Cyan: Mobile -->
+          <article class="service-card card-3d card-cyan" data-reveal-stagger>
+            <div class="card-icon">
+              <i data-lucide="smartphone" aria-hidden="true"></i>
+            </div>
+            <h3>Mobile App Development</h3>
+            <p>Cross-platform apps engineered for performance, offline-first reliability, and App Store success.</p>
+            <span class="card-tag">React Native &amp; Flutter</span>
+          </article>
+
+          <!-- Card 2 — Magenta: Web -->
+          <article class="service-card card-3d card-magenta" data-reveal-stagger>
+            <div class="card-icon">
+              <i data-lucide="globe" aria-hidden="true"></i>
+            </div>
+            <h3>Web Application Development</h3>
+            <p>Full-stack, scalable platforms built for speed, security, and real-world traffic from day one.</p>
+            <span class="card-tag">Next.js · Node.js · PostgreSQL</span>
+          </article>
+
+          <!-- Card 3 — Green: UI/UX -->
+          <article class="service-card card-3d card-green" data-reveal-stagger>
+            <div class="card-icon">
+              <i data-lucide="figma" aria-hidden="true"></i>
+            </div>
+            <h3>UI/UX Design</h3>
+            <p>From wireframe to pixel-perfect code — every screen designed for conversion and delight.</p>
+            <span class="card-tag">Figma · Prototyping · Systems</span>
+          </article>
+
+          <!-- Card 4 — Orange: AI -->
+          <article class="service-card card-3d card-orange" data-reveal-stagger>
+            <div class="card-icon">
+              <i data-lucide="bot" aria-hidden="true"></i>
+            </div>
+            <h3>AI &amp; Automation Integration</h3>
+            <p>LLM-powered features, intelligent chatbots, and workflow automation that unlocks scale.</p>
+            <span class="card-tag">OpenAI · LangChain · Python</span>
+          </article>
+
+          <!-- Card 5 — Purple: SEO -->
+          <article class="service-card card-3d card-purple" data-reveal-stagger>
+            <div class="card-icon">
+              <i data-lucide="search" aria-hidden="true"></i>
+            </div>
+            <h3>SEO &amp; Digital Marketing</h3>
+            <p>Technical SEO, content strategy, and growth loops that rank higher and convert better.</p>
+            <span class="card-tag">Core Web Vitals · Schema · Ads</span>
+          </article>
+
+          <!-- Card 6 — Amber: Brand -->
+          <article class="service-card card-3d card-amber" data-reveal-stagger>
+            <div class="card-icon">
+              <i data-lucide="palette" aria-hidden="true"></i>
+            </div>
+            <h3>Brand Identity &amp; Design Systems</h3>
+            <p>Logos, design tokens, and component libraries that give products a consistent, premium feel.</p>
+            <span class="card-tag">Branding · Tokens · Guidelines</span>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="section-sep" aria-hidden="true"></div>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECTION 3 — PORTFOLIO
+         ══════════════════════════════════════════════════════ -->
+    <section id="portfolio" aria-labelledby="portfolio-heading">
+      <div class="section-inner">
+        <p class="section-title" aria-hidden="true">// <span>portfolio</span>.filter(p =&gt; p.status === "Deployed")
+        </p>
+        <h2 id="portfolio-heading" class="section-headline">Live &amp; Shipped</h2>
+        <p class="portfolio-subtitle">// Showing 3 of 3 projects — all live and deployed</p>
+
+        <div class="portfolio-grid">
+
+          <!-- Project 1 — Curry Crave -->
+          <article class="project-card card-3d" data-reveal-stagger>
+            <div class="project-image-wrapper">
+              <img src="https://picsum.photos/seed/curry-crave/800/500" alt="Curry Crave — food delivery app screenshot"
+                width="800" height="500" loading="lazy" decoding="async">
+            </div>
+            <div class="project-body">
+              <div class="project-meta">
+                <span class="status-badge"><span class="dot-green" aria-hidden="true">●</span> Deployed</span>
+                <span class="commit">commit: a4f2b8c</span>
+                <span class="date-label">Apr 2025</span>
+              </div>
+              <h3>Curry Crave</h3>
+              <p class="project-type">Website + Mobile App + Admin Panel</p>
+              <p class="project-desc">Real-time food delivery system with multi-restaurant support, live order tracking,
+                payment gateway, and a full admin dashboard.</p>
+              <div class="project-tags" aria-label="Technologies used">
+                <span class="tag">React Native</span>
+                <span class="tag">Node.js</span>
+                <span class="tag">MongoDB</span>
+                <span class="tag">Stripe</span>
+                <span class="tag">Redux</span>
+              </div>
+              <div class="project-actions">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" data-cursor="pointer"
+                  aria-label="View Curry Crave live demo">
+                  <i data-lucide="external-link" aria-hidden="true"></i> Live Demo
+                </a>
+                <a href="#" class="btn-ghost" data-cursor="pointer" aria-label="View Curry Crave case study">
+                  <i data-lucide="code-2" aria-hidden="true"></i> Case Study
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 2 — Nurtivew -->
+          <article class="project-card card-3d" data-reveal-stagger>
+            <div class="project-image-wrapper">
+              <img src="https://picsum.photos/seed/nurtivew/800/500"
+                alt="Nurtivew — AI nutrition tracking app screenshot" width="800" height="500" loading="lazy"
+                decoding="async">
+            </div>
+            <div class="project-body">
+              <div class="project-meta">
+                <span class="status-badge"><span class="dot-green" aria-hidden="true">●</span> Deployed</span>
+                <span class="commit">commit: d7e1f3a</span>
+                <span class="date-label">Mar 2025</span>
+              </div>
+              <h3>Nurtivew</h3>
+              <p class="project-type">Mobile App (iOS + Android)</p>
+              <p class="project-desc">AI-powered nutrition tracking and meal planning with health analytics dashboards
+                and personalised dietary recommendation engine.</p>
+              <div class="project-tags" aria-label="Technologies used">
+                <span class="tag">Flutter</span>
+                <span class="tag">Firebase</span>
+                <span class="tag">Python</span>
+                <span class="tag">HealthKit</span>
+                <span class="tag">TensorFlow Lite</span>
+              </div>
+              <div class="project-actions">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" data-cursor="pointer"
+                  aria-label="View Nurtivew live demo">
+                  <i data-lucide="external-link" aria-hidden="true"></i> Live Demo
+                </a>
+                <a href="#" class="btn-ghost" data-cursor="pointer" aria-label="View Nurtivew case study">
+                  <i data-lucide="code-2" aria-hidden="true"></i> Case Study
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Project 3 — Adhvik Infra -->
+          <article class="project-card card-3d" data-reveal-stagger>
+            <div class="project-image-wrapper">
+              <img src="https://picsum.photos/seed/adhvik-infra/800/500"
+                alt="Adhvik Infra — construction company website screenshot" width="800" height="500" loading="lazy"
+                decoding="async">
+            </div>
+            <div class="project-body">
+              <div class="project-meta">
+                <span class="status-badge"><span class="dot-green" aria-hidden="true">●</span> Deployed</span>
+                <span class="commit">commit: f9c3a5e</span>
+                <span class="date-label">Feb 2025</span>
+              </div>
+              <h3>Adhvik Infra</h3>
+              <p class="project-type">Premium Website + BOQ Estimation Tool</p>
+              <p class="project-desc">High-end construction company site with project portfolio, interactive BOQ
+                calculator, material cost tracker, and client enquiry CRM.</p>
+              <div class="project-tags" aria-label="Technologies used">
+                <span class="tag">Next.js</span>
+                <span class="tag">Tailwind CSS</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Prisma</span>
+              </div>
+              <div class="project-actions">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="btn-primary" data-cursor="pointer"
+                  aria-label="View Adhvik Infra live demo">
+                  <i data-lucide="external-link" aria-hidden="true"></i> Live Demo
+                </a>
+                <a href="#" class="btn-ghost" data-cursor="pointer" aria-label="View Adhvik Infra case study">
+                  <i data-lucide="code-2" aria-hidden="true"></i> Case Study
+                </a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="section-sep" aria-hidden="true"></div>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECTION 4 — TECH STACK
+         ══════════════════════════════════════════════════════ -->
+    <section id="tech" aria-labelledby="tech-heading">
+      <canvas id="canvas-tech" class="particle-canvas" aria-hidden="true"></canvas>
+      <div class="section-inner" style="position:relative; z-index:1;">
+        <p class="section-title" aria-hidden="true">// import { tools } from "<span>@apdevlab/arsenal</span>"</p>
+        <h2 id="tech-heading" class="section-headline">Our Tech Arsenal</h2>
+
+        <!-- Row 1 — scrolls left -->
+        <div class="marquee-track mb-6" role="marquee" aria-label="Technology stack row 1">
+          <div class="marquee-inner scroll-left">
+            <!-- Set 1 -->
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/react/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">React Native</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/flutter/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Flutter</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/nextdotjs/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Next.js</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/nodedotjs/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Node.js</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/mongodb/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">MongoDB</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/postgresql/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">PostgreSQL</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/typescript/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">TypeScript</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/python/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Python</span>
+            <!-- Set 2 (duplicate for seamless loop) -->
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/react/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">React Native</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/flutter/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Flutter</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/nextdotjs/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Next.js</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/nodedotjs/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Node.js</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/mongodb/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">MongoDB</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/postgresql/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">PostgreSQL</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/typescript/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">TypeScript</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/python/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Python</span>
+          </div>
+        </div>
+
+        <!-- Row 2 — scrolls right -->
+        <div class="marquee-track" role="marquee" aria-label="Technology stack row 2">
+          <div class="marquee-inner scroll-right">
+            <!-- Set 1 -->
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/figma/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Figma</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/tailwindcss/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Tailwind CSS</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/firebase/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Firebase</span>
+            <span class="tech-chip"><img
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2306B6D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z'/%3E%3C/svg%3E"
+                alt="" aria-hidden="true" width="18" height="18">AWS</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/graphql/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">GraphQL</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/redis/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Redis</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/stripe/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Stripe</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/tensorflow/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">TensorFlow Lite</span>
+            <!-- Set 2 (duplicate for seamless loop) -->
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/figma/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Figma</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/tailwindcss/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Tailwind CSS</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/firebase/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Firebase</span>
+            <span class="tech-chip"><img
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%2306B6D4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z'/%3E%3C/svg%3E"
+                alt="" aria-hidden="true" width="18" height="18">AWS</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/graphql/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">GraphQL</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/redis/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Redis</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/stripe/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">Stripe</span>
+            <span class="tech-chip"><img src="https://cdn.simpleicons.org/tensorflow/06B6D4" alt="" aria-hidden="true"
+                width="18" height="18">TensorFlow Lite</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-sep" aria-hidden="true"></div>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECTION 5 — ABOUT
+         ══════════════════════════════════════════════════════ -->
+    <section id="about" aria-labelledby="about-heading">
+      <div class="section-inner">
+        <p class="section-title" aria-hidden="true">// <span>apdevlab</span>.getProfile()</p>
+        <h2 id="about-heading" class="section-headline">Who We Are</h2>
+
+        <div class="about-grid">
+
+          <!-- Left: Text -->
+          <div data-reveal>
+            <h3 class="text-2xl font-bold text-white mb-6" style="font-size: var(--text-xl); line-height:1.2;">"We Build
+              Products That Actually Ship"</h3>
+            <p class="text-muted mb-8" style="color: var(--color-text-muted); line-height:1.75;">
+              Apdevlab is a Hyderabad-based software studio specialising in mobile apps, web platforms,
+              and AI-powered digital products. We don't just design — we architect complete digital
+              ecosystems from concept to deployment. Our work sits at the intersection of technical
+              precision and design craft.
+            </p>
+
+            <!-- Value Props -->
+            <div class="value-prop">
+              <span class="value-prop-icon" aria-hidden="true">⚡</span>
+              <div>
+                <h4>Built to Scale</h4>
+                <p>Architecture that handles growth from day one.</p>
+              </div>
+            </div>
+            <div class="value-prop">
+              <span class="value-prop-icon" aria-hidden="true">🎯</span>
+              <div>
+                <h4>Design-First</h4>
+                <p>Every pixel has a purpose, every interaction has logic.</p>
+              </div>
+            </div>
+            <div class="value-prop">
+              <span class="value-prop-icon" aria-hidden="true">🤝</span>
+              <div>
+                <h4>Partnership Mindset</h4>
+                <p>We stay involved after launch, not just until it.</p>
+              </div>
+            </div>
+
+            <a href="#contact" class="about-cta-link" data-cursor="pointer" aria-label="Start a project with Apdevlab">
+              <span class="arrow">→</span> Start a project with us
+            </a>
+          </div>
+
+          <!-- Right: IDE Code Card -->
+          <div data-reveal>
+            <div class="ide-window gradient-border float-3d" style="animation: float-3d 6s ease-in-out infinite;">
+              <!-- Title bar -->
+              <div class="ide-titlebar">
+                <span class="ide-dot ide-dot-red" aria-hidden="true"></span>
+                <span class="ide-dot ide-dot-yellow" aria-hidden="true"></span>
+                <span class="ide-dot ide-dot-green" aria-hidden="true"></span>
+                <span class="ide-tab">apdevlab.config.js | UTF-8 | JavaScript</span>
+              </div>
+              <!-- Code body -->
+              <div class="ide-body" aria-label="Apdevlab configuration (decorative code)">
+                <pre><code><span class="syntax-keyword">const</span> apdevlab = {
+  <span class="line-num">01</span><span class="syntax-comment">  // Core info</span>
+  <span class="line-num">02</span>  founded:  <span class="syntax-cyan">"2026"</span>,
+  <span class="line-num">03</span>  location: <span class="syntax-cyan">"Hyderabad, India"</span>,
+  <span class="line-num">04</span>  services: [
+  <span class="line-num">05</span>    <span class="syntax-magenta">"Mobile"</span>,  <span class="syntax-magenta">"Web"</span>,
+  <span class="line-num">06</span>    <span class="syntax-magenta">"AI"</span>,      <span class="syntax-magenta">"Design"</span>,
+  <span class="line-num">07</span>  ],
+  <span class="line-num">08</span>  stack: [
+  <span class="line-num">09</span>    <span class="syntax-green">"React Native"</span>,
+  <span class="line-num">10</span>    <span class="syntax-green">"Next.js"</span>,
+  <span class="line-num">11</span>    <span class="syntax-green">"Node.js"</span>,
+  <span class="line-num">12</span>  ],
+  <span class="line-num">13</span>  clients:  <span class="syntax-cyan">"Global, Remote"</span>,
+  <span class="line-num">14</span>  email:    <span class="syntax-blue">"admin@apdevlab.com"</span>,
+  <span class="line-num">15</span>  status:   <span class="syntax-green">"● Available for projects"</span>,
+};</code></pre>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <div class="section-sep" aria-hidden="true"></div>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECTION 6 — WHY CHOOSE US
+         ══════════════════════════════════════════════════════ -->
+    <section id="why" aria-labelledby="why-heading">
+      <div class="section-inner">
+        <p class="section-title" aria-hidden="true">// <span>reasons</span>.sort((a,b) =&gt; b.impact - a.impact)</p>
+        <h2 id="why-heading" class="section-headline">Why Apdevlab?</h2>
+
+        <!-- Why items -->
+        <div>
+          <div class="why-item" data-reveal-stagger>
+            <div class="why-number" aria-hidden="true">01</div>
+            <div class="why-content">
+              <h3>Fast Turnaround</h3>
+              <p>Most MVPs delivered in 4–6 weeks, not 6 months. We ship, iterate, and improve — fast.</p>
+            </div>
+          </div>
+          <div class="why-item" data-reveal-stagger>
+            <div class="why-number" aria-hidden="true">02</div>
+            <div class="why-content">
+              <h3>Fixed Price, No Surprises</h3>
+              <p>Scope changes are discussed openly, never billed silently. You always know what you're paying for.</p>
+            </div>
+          </div>
+          <div class="why-item" data-reveal-stagger>
+            <div class="why-number" aria-hidden="true">03</div>
+            <div class="why-content">
+              <h3>You Own Everything</h3>
+              <p>Full source code and design files handed over at project completion. No lock-in, ever.</p>
+            </div>
+          </div>
+          <div class="why-item" data-reveal-stagger>
+            <div class="why-number" aria-hidden="true">04</div>
+            <div class="why-content">
+              <h3>Built for India &amp; Global Markets</h3>
+              <p>INR &amp; USD billing. We work seamlessly from Hyderabad to New York — timezone-flexible.</p>
+            </div>
+          </div>
+          <div class="why-item" data-reveal-stagger>
+            <div class="why-number" aria-hidden="true">05</div>
+            <div class="why-content">
+              <h3>Post-Launch Support</h3>
+              <p>30 days of free bug fixes after every launch. We don't disappear when the product goes live.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom CTA Block -->
+        <div class="why-cta-block" data-reveal>
+          <h3>"Ready to turn your idea into a product?"</h3>
+          <p>We reply within 24 hours. No pitch decks needed — just tell us what you're building.</p>
+          <a href="#contact" class="btn-primary btn-large cta-glow" data-cursor="pointer">
+            Get a Free Quote →
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-sep" aria-hidden="true"></div>
+
+    <!-- ══════════════════════════════════════════════════════
+         SECTION 7 — CONTACT
+         ══════════════════════════════════════════════════════ -->
+    <section id="contact" aria-labelledby="contact-heading">
+      <div class="section-inner">
+        <p class="section-title" aria-hidden="true">// await <span>sendMessage</span>()</p>
+        <h2 id="contact-heading" class="section-headline">Let's Build Together</h2>
+
+        <div class="contact-grid">
+
+          <!-- LEFT — IDE Contact Form -->
+          <div data-reveal>
+            <div class="ide-window">
+              <!-- Title bar -->
+              <div class="ide-titlebar">
+                <span class="ide-dot ide-dot-red" aria-hidden="true"></span>
+                <span class="ide-dot ide-dot-yellow" aria-hidden="true"></span>
+                <span class="ide-dot ide-dot-green" aria-hidden="true"></span>
+                <span class="ide-tab">contact_form.html | UTF-8 | JavaScript</span>
+              </div>
+
+              <div class="ide-body" style="padding: 1.5rem 2rem;">
+                <form id="contact-form" novalidate aria-label="Contact form">
+
+                  <!-- Name -->
+                  <div class="form-line mb-4">
+                    <label class="form-label" for="contact-name">
+                      <span class="syntax-comment">// Line 01: Your name</span>
+                      <br><span class="syntax-keyword">const</span> name =
+                    </label>
+                    <input class="form-input" type="text" id="contact-name" name="name" placeholder='"Your Name"'
+                      autocomplete="name" required minlength="2" aria-required="true">
+                  </div>
+
+                  <!-- Email -->
+                  <div class="form-line mb-4">
+                    <label class="form-label" for="contact-email">
+                      <span class="syntax-comment">// Line 02: Your email</span>
+                      <br><span class="syntax-keyword">const</span> email =
+                    </label>
+                    <input class="form-input" type="email" id="contact-email" name="email"
+                      placeholder='"hello@yourcompany.com"' autocomplete="email" required aria-required="true">
+                  </div>
+
+                  <!-- Project Type Chips -->
+                  <div class="form-line mb-5">
+                    <span class="form-label">
+                      <span class="syntax-comment">// Line 03: Project type (pick any)</span>
+                      <br><span class="syntax-keyword">const</span> projectType = [
+                    </span>
+                    <div class="flex flex-wrap gap-2 mt-2" role="group" aria-label="Project type selection">
+                      <button type="button" class="chip-toggle" aria-pressed="false">Web Dev</button>
+                      <button type="button" class="chip-toggle" aria-pressed="false">Mobile App</button>
+                      <button type="button" class="chip-toggle" aria-pressed="false">UI/UX Design</button>
+                      <button type="button" class="chip-toggle" aria-pressed="false">AI Integration</button>
+                      <button type="button" class="chip-toggle" aria-pressed="false">SEO</button>
+                    </div>
+                    <span class="form-label mt-1">];</span>
+                  </div>
+
+                  <!-- Budget -->
+                  <div class="form-line mb-4">
+                    <label class="form-label" for="contact-budget">
+                      <span class="syntax-comment">// Line 04: Budget range</span>
+                      <br><span class="syntax-keyword">const</span> budget =
+                    </label>
+                    <select class="form-input" id="contact-budget" name="budget" style="cursor:pointer;">
+                      <option value="" disabled selected>// select range</option>
+                      <option value="under50k">Under ₹50K</option>
+                      <option value="50k-2l">₹50K – ₹2L</option>
+                      <option value="2l-5l">₹2L – ₹5L</option>
+                      <option value="5l+">₹5L+</option>
+                      <option value="discuss">Let's Discuss</option>
+                    </select>
+                  </div>
+
+                  <!-- Message -->
+                  <div class="form-line mb-6">
+                    <label class="form-label" for="contact-message">
+                      <span class="syntax-comment">// Line 05: Tell us about your project</span>
+                      <br><span class="syntax-keyword">const</span> message =
+                    </label>
+                    <textarea class="form-input" id="contact-message" name="message" rows="4"
+                      placeholder='"We want to build a..."' required minlength="20" aria-required="true"
+                      style="resize: vertical;"></textarea>
+                  </div>
+
+                  <!-- Submit -->
+                  <button id="submit-btn" type="submit" class="btn-primary cta-glow w-full justify-center"
+                    data-cursor="pointer" style="width:100%; justify-content:center;">
+                    await sendMessage();
+                  </button>
+
+                </form>
+
+                <!-- Success message -->
+                <div id="form-success" class="hidden success-message" role="alert" aria-live="polite">
+                  <span class="syntax-green">✓</span> Message compiled &amp; sent — we'll reply within 24 hours.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT — Info card -->
+          <div data-reveal>
+            <div class="contact-info-block" style="position:sticky; top: 6rem;">
+
+              <!-- Contact Info -->
+              <p class="contact-section-label"># Contact Info</p>
+              <div class="contact-info-row">
+                <i data-lucide="mail" aria-hidden="true"></i>
+                <a href="mailto:admin@apdevlab.com">admin@apdevlab.com</a>
+              </div>
+              <div class="contact-info-row">
+                <i data-lucide="phone" aria-hidden="true"></i>
+                <a href="tel:+917491009852">+91 74910 09852</a>
+              </div>
+              <div class="contact-info-row">
+                <i data-lucide="map-pin" aria-hidden="true"></i>
+                <span>Hyderabad, Telangana, India</span>
+              </div>
+
+              <div class="divider-h" aria-hidden="true"></div>
+
+              <!-- Social -->
+              <p class="contact-section-label"># Connect</p>
+              <div class="social-row mb-5">
+
+                <!-- Instagram — camera icon, brand pink #E1306C -->
+                <a href="https://www.instagram.com/apdev_lab?igsh=bjljZWc0N25vcmFn" target="_blank"
+                  rel="noopener noreferrer" class="social-link" aria-label="Apdevlab on Instagram">
+                  <img
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 24 24' fill='none' stroke='%23E1306C' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='2' width='20' height='20' rx='5' ry='5'/%3E%3Cpath d='M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z'/%3E%3Cline x1='17.5' y1='6.5' x2='17.51' y2='6.5'/%3E%3C/svg%3E"
+                    alt="" aria-hidden="true" width="26" height="26">
+                </a>
+
+                <!-- Facebook — filled 'f', brand blue #1877F2 -->
+                <a href="https://www.facebook.com/share/1FFMYAbDJY/" target="_blank" rel="noopener noreferrer"
+                  class="social-link" aria-label="Apdevlab on Facebook">
+                  <img
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 24 24' fill='%231877F2'%3E%3Cpath d='M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z'/%3E%3C/svg%3E"
+                    alt="" aria-hidden="true" width="26" height="26">
+                </a>
+
+                <!-- LinkedIn — filled 'in' logo, brand blue #0A66C2 -->
+                <a href="https://www.linkedin.com/in/apdev-lab-b71b52401?utm_source=share_via&utm_content=profile&utm_medium=member_android"
+                  target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Apdevlab on LinkedIn">
+                  <img
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 24 24' fill='%230A66C2'%3E%3Cpath d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/%3E%3C/svg%3E"
+                    alt="" aria-hidden="true" width="26" height="26">
+                </a>
+
+                <!-- WhatsApp — chat bubble with W inside, brand green #25D366 -->
+                <a href="https://wa.me/917491009852?text=Hi%20Apdevlab%2C%20I%20visited%20your%20website%20and%20I%27d%20like%20to%20discuss%20a%20project%20with%20you."
+                  target="_blank" rel="noopener noreferrer" class="social-link"
+                  aria-label="Chat with Apdevlab on WhatsApp">
+                  <img
+                    src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='26' height='26' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%2325D366' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z'/%3E%3Ctext x='12' y='14.5' text-anchor='middle' font-weight='800' font-size='7.5' fill='%2325D366' font-family='Arial%2Csans-serif'%3EW%3C/text%3E%3C/svg%3E"
+                    alt="" aria-hidden="true" width="26" height="26">
+                </a>
+
+              </div>
+
+
+              <div class="divider-h" aria-hidden="true"></div>
+
+              <!-- Status -->
+              <p class="contact-section-label"># Status</p>
+              <div class="contact-info-row">
+                <span style="font-size:0.8rem; color:var(--color-text-muted);">Availability:</span>
+                <span class="status-online">
+                  <span class="dot-pulse" aria-hidden="true"></span>
+                  Online
+                </span>
+              </div>
+              <div class="contact-info-row" style="margin-top:0.5rem;">
+                <i data-lucide="clock" aria-hidden="true"></i>
+                <span style="font-family:var(--font-mono); font-size:0.8rem; color:var(--color-text-muted);">Response:
+                  ~24 hours</span>
+              </div>
+              <div class="contact-info-row" style="margin-top:0.5rem;">
+                <i data-lucide="globe" aria-hidden="true"></i>
+                <span style="font-family:var(--font-mono); font-size:0.8rem; color:var(--color-text-muted);">IST
+                  (UTC+5:30)</span>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ════════════════════════════════════════════════════════
+       FOOTER — styled as closing code comment
+       ════════════════════════════════════════════════════════ -->
+  <footer role="contentinfo">
+    <div class="footer-code">
+      <p>/*</p>
+      <p> * &copy; 2026 Apdevlab. All rights reserved.</p>
+      <p> * Built with precision in Hyderabad, India.</p>
+      <p> * ─────────────────────────────────────────────</p>
+      <p> * admin@apdevlab.com &nbsp;·&nbsp; Global, Remote</p>
+      <p> */</p>
+    </div>
+    <nav class="footer-links" aria-label="Footer navigation">
+      <a href="#home">Home</a>
+      <a href="#services">Services</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#tech">Tech Stack</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </footer>
+
+  <!-- ── GSAP CDN (after DOM) ──────────────────────────── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- ── App Scripts ───────────────────────────────────── -->
+  <script src="./js/particles.js"></script>
+  <script src="./js/form.js"></script>
+  <script src="./js/main.js"></script>
+
+  <!-- ── Lucide init (fallback if CDN deferred) ───────── -->
+  <script>
+    if (typeof lucide !== 'undefined') lucide.createIcons();
+  </script>
+
+</body>
+
+</html>
